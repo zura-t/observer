@@ -1,0 +1,23 @@
+package userRepo
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/Masterminds/squirrel"
+)
+
+func (r *repo) DeleteUser(ctx context.Context, id uint64) error {
+	qb := squirrel.Delete(tableUsers).Where(squirrel.Eq{columnID: id}).PlaceholderFormat(squirrel.Dollar)
+	sql, args, err := qb.ToSql()
+	if err != nil {
+		return fmt.Errorf("squirrel: %w", err)
+	}
+
+	_, err = r.db.Exec(ctx, sql, args...)
+	if err != nil {
+		return fmt.Errorf("postgres: %w", convertPGError(err))
+	}
+
+	return nil
+}

@@ -35,7 +35,7 @@ func New(handler *gin.Engine, userUsecase usecase.UserUsecase, tokenMaker token.
 }
 
 func (u *userController) createUser(c *gin.Context) {
-	var req controller.CreateUserRequest
+	var req CreateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		u.logger.Error(err, "user routes - createUser")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)
@@ -62,7 +62,7 @@ func (u *userController) createUser(c *gin.Context) {
 }
 
 func (u *userController) login(c *gin.Context) {
-	var req controller.LoginRequest
+	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		u.logger.Error(err, "user routes - login")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)
@@ -85,7 +85,7 @@ func (u *userController) login(c *gin.Context) {
 }
 
 func (u *userController) getUserByID(c *gin.Context) {
-	var req controller.GetUserByIDRequest
+	var req GetUserByIDRequest
 	if err := c.ShouldBindUri(&req); err != nil {
 		u.logger.Error(err, "user routes - getUserByID")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)
@@ -107,7 +107,7 @@ func (u *userController) getUserByID(c *gin.Context) {
 }
 
 func (u *userController) getUserByEmail(c *gin.Context) {
-	var req controller.GetUserByEmailRequest
+	var req GetUserByEmailRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
 		u.logger.Error(err, "user routes - getUserByEmail")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)
@@ -125,14 +125,14 @@ func (u *userController) getUserByEmail(c *gin.Context) {
 }
 
 func (u *userController) updateUser(c *gin.Context) {
-	var uri controller.GetUserByIDRequest
+	var uri GetUserByIDRequest
 	if err := c.ShouldBindUri(&uri); err != nil {
 		u.logger.Error(err, "user routes - updateUser")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)
 		return
 	}
 
-	var req controller.UpdateUserRequest
+	var req UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		u.logger.Error(err, "user routes - updateUser")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)
@@ -153,7 +153,7 @@ func (u *userController) updateUser(c *gin.Context) {
 }
 
 func (u *userController) deleteUser(c *gin.Context) {
-	var req controller.DeleteUserRequest
+	var req DeleteUserRequest
 	if err := c.ShouldBindUri(&req); err != nil {
 		u.logger.Error(err, "user routes - deleteUser")
 		controller.ErrorResponse(c, http.StatusBadRequest, err)

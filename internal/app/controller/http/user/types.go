@@ -1,4 +1,4 @@
-package controller
+package userController
 
 type CreateUserRequest struct {
 	Email    string `json:"email" binding:"required,email"`

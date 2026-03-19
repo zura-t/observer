@@ -1,5 +1,5 @@
 new_migration:
-	migrate create -ext sql -dir db/migration -seq $(name)
+	migrate create -ext sql -dir db/migrations -seq $(name)
 
 migrateup:
 	migrate -path db/migrations -database "postgresql://postgres:root@localhost:5423/observer?sslmode=disable" -verbose up

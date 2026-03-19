@@ -6,9 +6,10 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/zura-t/observer.dev/internal/app/models"
+	userUsecase "github.com/zura-t/observer.dev/internal/app/usecases/user"
 )
 
-func (r *repo) GetUserByWhere(ctx context.Context, filter *models.UserSearchFilter) (*models.UserDB, error) {
+func (r *repo) GetUserByWhere(ctx context.Context, filter *userUsecase.UserSearchFilter) (*models.UserDB, error) {
 	qb := squirrel.Select(tableUsersColumns...).From(tableUsers).PlaceholderFormat(squirrel.Dollar)
 	qb = applyUserSearchFilter(qb, filter)
 	sql, args, err := qb.ToSql()
@@ -25,7 +26,7 @@ func (r *repo) GetUserByWhere(ctx context.Context, filter *models.UserSearchFilt
 	return &users, nil
 }
 
-func applyUserSearchFilter(qb squirrel.SelectBuilder, filter *models.UserSearchFilter) squirrel.SelectBuilder {
+func applyUserSearchFilter(qb squirrel.SelectBuilder, filter *userUsecase.UserSearchFilter) squirrel.SelectBuilder {
 	if filter == nil {
 		return qb
 	}

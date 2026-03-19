@@ -8,7 +8,7 @@ import (
 )
 
 func (u *usecase) GetUserByUsername(ctx context.Context, username string) (*models.User, error) {
-	userDB, err := u.userRepo.GetUserByWhere(ctx, &models.UserSearchFilter{
+	userDB, err := u.userRepo.GetUserByWhere(ctx, &UserSearchFilter{
 		Name: username,
 	})
 	if err != nil {

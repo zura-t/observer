@@ -34,11 +34,20 @@ type UpdateUser struct {
 	ID         uint64
 	Name       string
 	Email      string
-	IsVerified bool
+	IsVerified *bool
 }
 
 type ChangePassword struct {
 	ID          uint64
 	OldPassword string
 	NewPassword string
+}
+
+type UserSearchFilter struct {
+	ID         *uint64
+	Email      string
+	Name       string
+	IsVerified *bool
+	CreatedAt  *time.Time
+	UpdatedAt  *time.Time
 }

@@ -17,7 +17,7 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*models.UserDB
 	user := models.UserDB{}
 	err = r.db.QueryRow(ctx, sql, args...).Scan(&user.ID, &user.Email, &user.Password, &user.Name, &user.IsVerified, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		return nil, fmt.Errorf("postgres: %w", err)
+		return nil, fmt.Errorf("postgres: %w", convertPGError(err))
 	}
 
 	return &user, nil

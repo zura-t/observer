@@ -7,19 +7,18 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	controller "github.com/zura-t/observer.dev/internal/app/controller/http"
 	"github.com/zura-t/observer.dev/pkg/token"
 )
 
 const (
 	authorizationHeaderKey  = "authorization"
 	authorizationTypeBearer = "bearer"
-	authorizationPayloadKey = "authorization_payload"
+	AuthorizationPayloadKey = "authorization_payload"
 )
 
 func AuthMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 	abort := func(ctx *gin.Context, err error) {
-		controller.ErrorResponse(ctx, http.StatusUnauthorized, err)
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -49,7 +48,7 @@ func AuthMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set(authorizationPayloadKey, payload)
+		ctx.Set(AuthorizationPayloadKey, payload)
 		ctx.Next()
 	}
 }

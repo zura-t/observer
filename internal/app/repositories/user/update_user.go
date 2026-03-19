@@ -35,7 +35,7 @@ func applyUserUpdate(qb squirrel.UpdateBuilder, user *userUsecase.UpdateUser) sq
 		qb = qb.Set(columnName, user.Name)
 	}
 
-	if user.IsVerified {
+	if user.IsVerified != nil {
 		qb = qb.Set(columnIsVerified, user.IsVerified)
 	}
 

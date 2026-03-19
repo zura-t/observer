@@ -21,15 +21,6 @@ type User struct {
 	UpdatedAt  time.Time
 }
 
-type UserSearchFilter struct {
-	ID         *uint64
-	Email      string
-	Name       string
-	IsVerified *bool
-	CreatedAt  *time.Time
-	UpdatedAt  *time.Time
-}
-
 type UserWithToken struct {
 	User   *User
 	AccessToken  string

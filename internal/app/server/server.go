@@ -6,13 +6,16 @@ import (
 	// fkng error because of go and gopls versions
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/zura-t/observer.dev/internal/app/controller/http/user"
-	"github.com/zura-t/observer.dev/internal/app/usecases/user"
+	diaryController "github.com/zura-t/observer.dev/internal/app/controller/http/diary"
+	userController "github.com/zura-t/observer.dev/internal/app/controller/http/user"
+	"github.com/zura-t/observer.dev/internal/app/controller/middleware"
+	diaryUsecase "github.com/zura-t/observer.dev/internal/app/usecases/diary"
+	userUsecase "github.com/zura-t/observer.dev/internal/app/usecases/user"
 	"github.com/zura-t/observer.dev/pkg/logger"
 	"github.com/zura-t/observer.dev/pkg/token"
 )
 
-func NewRouter(handler *gin.Engine, userUsecase userUsecase.UserUsecase, tokenMaker token.Maker, logger logger.Interface) {
+func NewRouter(handler *gin.Engine, userUsecase userUsecase.UserUsecase, diaryUsecase diaryUsecase.DiaryUsecase, tokenMaker token.Maker, logger logger.Interface) {
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
 	handler.Use(cors.New(cors.Config{
@@ -36,7 +39,9 @@ func NewRouter(handler *gin.Engine, userUsecase userUsecase.UserUsecase, tokenMa
 			"message": "pong",
 		})
 	})
+	authRoutes := handler.Group("/").Use(middleware.AuthMiddleware(tokenMaker))
 	{
 		userController.New(handler, userUsecase, tokenMaker, logger)
+		diaryController.New(authRoutes, diaryUsecase, logger)
 	}
 }

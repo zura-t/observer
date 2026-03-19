@@ -6,7 +6,8 @@ var (
 	ErrNotFound      = errors.New("not found")
 	ErrAlreadyExists = errors.New("already exists")
 
-	ErrUserNotFound        = errors.New("user not found")
+	ErrUserNotFound       = errors.New("user not found")
+	ErrDiaryEntryNotFound = errors.New("diary entry not found")
 	ErrInvalidCredentials  = errors.New("invalid credentials")
 	ErrInvalidEmail        = errors.New("invalid email address")
 	ErrInvalidPassword     = errors.New("invalid password")

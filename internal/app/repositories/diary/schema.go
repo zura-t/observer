@@ -40,7 +40,6 @@ var (
 	createEntryColumns = []string{
 		columnTitle,
 		columnText,
-		columnEntryDate,
 		columnUserID,
 	}
 )

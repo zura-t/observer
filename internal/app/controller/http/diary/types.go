@@ -1,9 +1,11 @@
 package diaryController
 
+import "time"
+
 type CreateDiaryRequest struct {
-	Title     string `json:"title" binding:"required"`
-	Text      string `json:"text" binding:"required"`
-	EntryDate string `json:"entry_date"`
+	Title     string    `json:"title" binding:"required"`
+	Text      string    `json:"text" binding:"required"`
+	EntryDate time.Time `json:"entry_date"`
 }
 
 type GetDiaryByIDRequest struct {
@@ -11,8 +13,8 @@ type GetDiaryByIDRequest struct {
 }
 
 type GetDiaryRequest struct {
-	DateFrom string `form:"date_from"`
-	DateTo   string `form:"date_to"`
+	Limit  uint32 `form:"limit,default=10"`
+	Offset uint32 `form:"offset,default=0"`
 }
 
 type UpdateDiaryRequest struct {

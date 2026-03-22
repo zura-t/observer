@@ -14,8 +14,9 @@ func (r *repo) GetEntries(ctx context.Context, filter *diaryUsecase.DiarySearchF
 		From(tableDiaryEntries).
 		Where(squirrel.Eq{columnUserID: filter.UserID}).
 		OrderBy(columnEntryDate + " DESC").
+		Limit(uint64(filter.Limit)).
+		Offset(uint64(filter.Offset)).
 		PlaceholderFormat(squirrel.Dollar)
-	qb = applyDiarySearchFilter(qb, filter)
 
 	sql, args, err := qb.ToSql()
 	if err != nil {
@@ -50,20 +51,4 @@ func (r *repo) GetEntries(ctx context.Context, filter *diaryUsecase.DiarySearchF
 	}
 
 	return &entries, nil
-}
-
-func applyDiarySearchFilter(qb squirrel.SelectBuilder, filter *diaryUsecase.DiarySearchFilter) squirrel.SelectBuilder {
-	if filter == nil {
-		return qb
-	}
-
-	if filter.DateFrom != nil {
-		qb = qb.Where(squirrel.GtOrEq{columnEntryDate: *filter.DateFrom})
-	}
-
-	if filter.DateTo != nil {
-		qb = qb.Where(squirrel.LtOrEq{columnEntryDate: *filter.DateTo})
-	}
-
-	return qb
 }

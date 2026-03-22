@@ -44,7 +44,6 @@ func (d *diaryController) createDiary(c *gin.Context) {
 	entry, err := d.diaryUsecase.CreateDiaryEntry(c, &usecase.CreateDiaryEntry{
 		Title:     req.Title,
 		Text:      req.Text,
-		EntryDate: time.Now(),
 		UserID:    payload.ID,
 	})
 	if err != nil {
@@ -96,26 +95,8 @@ func (d *diaryController) getDiary(c *gin.Context) {
 
 	filter := &usecase.DiarySearchFilter{
 		UserID: payload.ID,
-	}
-
-	if req.DateFrom != "" {
-		dateFrom, err := time.Parse("2000-01-01", req.DateFrom)
-		if err != nil {
-			d.logger.Error(err, "diary routes - getDiary")
-			controller.ErrorResponse(c, http.StatusBadRequest, errors.New("invalid date_from format, expected YYYY-MM-DD"))
-			return
-		}
-		filter.DateFrom = &dateFrom
-	}
-
-	if req.DateTo != "" {
-		dateTo, err := time.Parse("2000-01-01", req.DateTo)
-		if err != nil {
-			d.logger.Error(err, "diary routes - getDiary")
-			controller.ErrorResponse(c, http.StatusBadRequest, errors.New("invalid date_to format, expected YYYY-MM-DD"))
-			return
-		}
-		filter.DateTo = &dateTo
+		Limit: req.Limit,
+		Offset: req.Offset,
 	}
 
 	entries, err := d.diaryUsecase.GetEntries(c, filter)

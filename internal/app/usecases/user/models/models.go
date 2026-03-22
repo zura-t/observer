@@ -22,8 +22,8 @@ type UserResponse struct {
 	Email      string
 	Name       string
 	IsVerified bool
-	CreatedAt  int64
-	UpdatedAt  int64
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
 
 type UpdateUser struct {

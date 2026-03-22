@@ -13,9 +13,9 @@ type CreateDiaryEntry struct {
 }
 
 type DiarySearchFilter struct {
-	UserID   uint64
-	DateFrom *time.Time
-	DateTo   *time.Time
+	UserID uint64
+	Limit  uint32
+	Offset uint32
 }
 
 type UpdateDiaryEntry struct {

@@ -6,16 +6,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/zura-t/observer.dev/internal/app/models"
 	"github.com/zura-t/observer.dev/pkg/token"
 	"github.com/zura-t/observer.dev/pkg/utils"
 )
 
 func (u *usecase) RegisterUser(ctx context.Context, user *RegisterUser) (*models.UserWithToken, error) {
-	// ? get user account
 	userExists, err := u.userRepo.GetUserByEmail(ctx, user.Email)
-	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+	if err != nil && !errors.Is(err, models.ErrUserNotFound) {
 		return nil, fmt.Errorf("register user: %w", err)
 	}
 

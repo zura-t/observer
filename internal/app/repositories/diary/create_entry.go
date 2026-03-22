@@ -3,7 +3,6 @@ package diaryRepo
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/zura-t/observer.dev/internal/app/models"
@@ -32,7 +31,6 @@ func (r *repo) CreateDiaryEntry(ctx context.Context, entry *diaryUsecase.CreateD
 		&entryCreated.CreatedAt,
 		&entryCreated.UpdatedAt,
 	)
-	log.Print(err)
 	if err != nil {
 		return nil, fmt.Errorf("postgres: %w", convertPGError(err))
 	}

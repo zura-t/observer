@@ -18,9 +18,9 @@ type GetDiaryRequest struct {
 }
 
 type UpdateDiaryRequest struct {
-	Title     string `json:"title"`
-	Text      string `json:"text"`
-	EntryDate string `json:"entry_date"`
+	Title     string    `json:"title"`
+	Text      string    `json:"text"`
+	EntryDate time.Time `json:"entry_date"`
 }
 
 type DeleteDiaryRequest struct {

@@ -3,6 +3,7 @@ package diaryRepo
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/zura-t/observer.dev/internal/app/models"
@@ -11,6 +12,9 @@ import (
 
 func (r *repo) CreateDiaryEntry(ctx context.Context, entry *diaryUsecase.CreateDiaryEntry) (*models.Diary, error) {
 	newEntry := newDiaryEntry(entry)
+	if newEntry.EntryDate.IsZero() {
+		newEntry.EntryDate = time.Now().UTC()
+	}
 	sql, args, err := squirrel.Insert(tableDiaryEntries).
 		Columns(createEntryColumns...).
 		Values(newEntry.Values(createEntryColumns...)...).

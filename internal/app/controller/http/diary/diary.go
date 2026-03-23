@@ -3,7 +3,6 @@ package diaryController
 import (
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	controller "github.com/zura-t/observer.dev/internal/app/controller/http"
@@ -44,6 +43,7 @@ func (d *diaryController) createDiary(c *gin.Context) {
 	entry, err := d.diaryUsecase.CreateDiaryEntry(c, &usecase.CreateDiaryEntry{
 		Title:     req.Title,
 		Text:      req.Text,
+		EntryDate: req.EntryDate,
 		UserID:    payload.ID,
 	})
 	if err != nil {
@@ -63,9 +63,13 @@ func (d *diaryController) getDiaryByID(c *gin.Context) {
 		return
 	}
 
-	// ? check user id
+	payload, err := controller.GetPayload(c)
+	if err != nil {
+		d.logger.Error(err, "diary routes - getDiary")
+		return
+	}
 
-	entry, err := d.diaryUsecase.GetEntry(c, req.ID)
+	entry, err := d.diaryUsecase.GetEntry(c, req.ID, payload.ID)
 	if err != nil {
 		d.logger.Error(err, "diary routes - getDiaryByID")
 		if errors.Is(err, models.ErrDiaryEntryNotFound) {
@@ -95,7 +99,7 @@ func (d *diaryController) getDiary(c *gin.Context) {
 
 	filter := &usecase.DiarySearchFilter{
 		UserID: payload.ID,
-		Limit: req.Limit,
+		Limit:  req.Limit,
 		Offset: req.Offset,
 	}
 
@@ -124,20 +128,18 @@ func (d *diaryController) updateDiary(c *gin.Context) {
 		return
 	}
 
-	update := &usecase.UpdateDiaryEntry{
-		ID:    uri.ID,
-		Title: req.Title,
-		Text:  req.Text,
+	payload, err := controller.GetPayload(c)
+	if err != nil {
+		d.logger.Error(err, "diary routes - getDiary")
+		return
 	}
 
-	if req.EntryDate != "" {
-		entryDate, err := time.Parse("2000-01-01", req.EntryDate)
-		if err != nil {
-			d.logger.Error(err, "diary routes - updateDiary")
-			controller.ErrorResponse(c, http.StatusBadRequest, errors.New("invalid entry_date format, expected YYYY-MM-DD"))
-			return
-		}
-		update.EntryDate = &entryDate
+	update := &usecase.UpdateDiaryEntry{
+		ID:        uri.ID,
+		Title:     req.Title,
+		Text:      req.Text,
+		EntryDate: req.EntryDate,
+		UserID:    payload.ID,
 	}
 
 	diaryUpdated, err := d.diaryUsecase.UpdateDiaryEntry(c, update)
@@ -162,7 +164,13 @@ func (d *diaryController) deleteDiary(c *gin.Context) {
 		return
 	}
 
-	if err := d.diaryUsecase.DeleteEntry(c, req.ID); err != nil {
+	payload, err := controller.GetPayload(c)
+	if err != nil {
+		d.logger.Error(err, "diary routes - getDiary")
+		return
+	}
+
+	if err := d.diaryUsecase.DeleteEntry(c, req.ID, payload.ID); err != nil {
 		d.logger.Error(err, "diary routes - deleteDiary")
 		controller.ErrorResponse(c, http.StatusInternalServerError, err)
 		return

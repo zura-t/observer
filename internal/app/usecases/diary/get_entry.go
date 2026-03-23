@@ -7,8 +7,8 @@ import (
 	"github.com/zura-t/observer.dev/internal/app/models"
 )
 
-func (u *usecase) GetEntry(ctx context.Context, id uint64) (*models.Diary, error) {
-	entry, err := u.diaryRepo.GetEntry(ctx, id)
+func (u *usecase) GetEntry(ctx context.Context, id uint64, userID uint64) (*models.Diary, error) {
+	entry, err := u.diaryRepo.GetEntry(ctx, id, userID)
 	if err != nil {
 		return nil, fmt.Errorf("get entry: %w", err)
 	}

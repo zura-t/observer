@@ -7,9 +7,9 @@ import (
 	"github.com/Masterminds/squirrel"
 )
 
-func (r *repo) DeleteEntry(ctx context.Context, id uint64) error {
+func (r *repo) DeleteEntry(ctx context.Context, id uint64, userID uint64) error {
 	qb := squirrel.Delete(tableDiaryEntries).
-		Where(squirrel.Eq{columnID: id}).
+		Where(squirrel.Eq{columnID: id, columnUserID: userID}).
 		PlaceholderFormat(squirrel.Dollar)
 
 	sql, args, err := qb.ToSql()

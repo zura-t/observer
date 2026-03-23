@@ -8,10 +8,10 @@ import (
 	"github.com/zura-t/observer.dev/internal/app/models"
 )
 
-func (r *repo) GetEntry(ctx context.Context, id uint64) (*models.Diary, error) {
+func (r *repo) GetEntry(ctx context.Context, id uint64, userID uint64) (*models.Diary, error) {
 	sql, args, err := squirrel.Select(tableDiaryEntriesColumns...).
 		From(tableDiaryEntries).
-		Where(squirrel.Eq{columnID: id}).
+		Where(squirrel.Eq{columnID: id, columnUserID: userID}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {

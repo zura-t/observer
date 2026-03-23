@@ -11,7 +11,7 @@ import (
 
 func (r *repo) UpdateDiaryEntry(ctx context.Context, entry *diaryUsecase.UpdateDiaryEntry) (*models.Diary, error) {
 	qb := squirrel.Update(tableDiaryEntries).
-		Where(squirrel.Eq{columnID: entry.ID}).
+		Where(squirrel.Eq{columnID: entry.ID, columnUserID: entry.UserID}).
 		Suffix("RETURNING *").
 		PlaceholderFormat(squirrel.Dollar)
 	qb = applyDiaryEntryUpdate(qb, entry)
@@ -47,8 +47,8 @@ func applyDiaryEntryUpdate(qb squirrel.UpdateBuilder, diaryEntry *diaryUsecase.U
 		qb = qb.Set(columnText, diaryEntry.Text)
 	}
 
-	if diaryEntry.EntryDate != nil {
-		qb = qb.Set(columnEntryDate, *diaryEntry.EntryDate)
+	if !diaryEntry.EntryDate.IsZero() {
+		qb = qb.Set(columnEntryDate, diaryEntry.EntryDate)
 	}
 
 	qb = qb.Set(columnUpdatedAt, squirrel.Expr("NOW()"))

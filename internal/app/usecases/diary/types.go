@@ -22,5 +22,6 @@ type UpdateDiaryEntry struct {
 	ID        uint64
 	Title     string
 	Text      string
-	EntryDate *time.Time
+	EntryDate time.Time
+	UserID    uint64
 }

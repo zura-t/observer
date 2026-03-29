@@ -22,7 +22,7 @@ func convertPGError(err error) error {
 		return nil
 	}
 
-	if errors.As(err, &pgx.ErrNoRows) {
+	if errors.Is(err, pgx.ErrNoRows) {
 		return models.ErrDiaryEntryNotFound
 	}
 	return err

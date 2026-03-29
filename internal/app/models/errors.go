@@ -8,6 +8,8 @@ var (
 
 	ErrUserNotFound       = errors.New("user not found")
 	ErrDiaryEntryNotFound = errors.New("diary entry not found")
+	ErrHabitNotFound      = errors.New("habit not found")
+	ErrHabitLogNotFound   = errors.New("habit log not found")
 	ErrInvalidCredentials  = errors.New("invalid credentials")
 	ErrInvalidEmail        = errors.New("invalid email address")
 	ErrInvalidPassword     = errors.New("invalid password")

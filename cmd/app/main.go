@@ -7,10 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
 	diaryRepo "github.com/zura-t/observer.dev/internal/app/repositories/diary"
+	habitsRepo "github.com/zura-t/observer.dev/internal/app/repositories/habits"
 	userRepo "github.com/zura-t/observer.dev/internal/app/repositories/user"
 
 	"github.com/zura-t/observer.dev/internal/app/server"
 	diaryUsecase "github.com/zura-t/observer.dev/internal/app/usecases/diary"
+	habitsUsecase "github.com/zura-t/observer.dev/internal/app/usecases/habits"
 	userUsecase "github.com/zura-t/observer.dev/internal/app/usecases/user"
 	"github.com/zura-t/observer.dev/internal/config"
 	"github.com/zura-t/observer.dev/pkg/logger"
@@ -24,7 +26,7 @@ func main() {
 	}
 
 	l := logger.New(config.LogLevel)
-	conn, err := pgx.Connect(context.Background(), "postgresql://postgres:root@host.docker.internal:5423/observer?sslmode=disable")
+	conn, err := pgx.Connect(context.Background(), "postgresql://postgres:root@localhost:5423/observer?sslmode=disable")
 	if err != nil {
 		log.Fatal("Error ", err)
 	}
@@ -33,6 +35,7 @@ func main() {
 	//! repos
 	userRepo := userRepo.New(conn)
 	diaryRepo := diaryRepo.New(conn)
+	habitsRepo := habitsRepo.New(conn, l)
 
 	tokenMaker, err := token.NewJwtMaker(config.TokenSymmetricKey)
 	if err != nil {
@@ -42,8 +45,9 @@ func main() {
 	//! usecases
 	userUsecase := userUsecase.New(userRepo, tokenMaker, config)
 	diaryUsecase := diaryUsecase.New(diaryRepo, config)
+	habitsUsecase := habitsUsecase.New(habitsRepo, config)
 
 	handler := gin.New()
-	server.NewRouter(handler, userUsecase, diaryUsecase, tokenMaker, l)
+	server.NewRouter(handler, userUsecase, diaryUsecase, habitsUsecase, tokenMaker, l)
 	handler.Run("127.0.0.1:8080")
 }

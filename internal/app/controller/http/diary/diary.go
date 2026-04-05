@@ -13,10 +13,10 @@ import (
 
 type diaryController struct {
 	diaryUsecase usecase.DiaryUsecase
-	logger       logger.Interface
+	logger       *logger.Logger
 }
 
-func New(handler gin.IRoutes, diaryUsecase usecase.DiaryUsecase, logger logger.Interface) {
+func New(handler gin.IRoutes, diaryUsecase usecase.DiaryUsecase, logger *logger.Logger) {
 	routes := &diaryController{diaryUsecase, logger}
 
 	handler.POST("/diary", routes.createDiary)

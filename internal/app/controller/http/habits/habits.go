@@ -13,10 +13,10 @@ import (
 
 type habitsController struct {
 	habitsUsecase usecase.HabitsUsecase
-	logger        logger.Interface
+	logger        *logger.Logger
 }
 
-func New(handler gin.IRoutes, habitsUsecase usecase.HabitsUsecase, logger logger.Interface) {
+func New(handler gin.IRoutes, habitsUsecase usecase.HabitsUsecase, logger *logger.Logger) {
 	routes := &habitsController{habitsUsecase, logger}
 
 	handler.POST("/habits", routes.createHabit)

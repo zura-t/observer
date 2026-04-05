@@ -8,11 +8,13 @@ import (
 	"github.com/jackc/pgx/v5"
 	diaryRepo "github.com/zura-t/observer.dev/internal/app/repositories/diary"
 	habitsRepo "github.com/zura-t/observer.dev/internal/app/repositories/habits"
+	notesRepo "github.com/zura-t/observer.dev/internal/app/repositories/notes"
 	userRepo "github.com/zura-t/observer.dev/internal/app/repositories/user"
 
 	"github.com/zura-t/observer.dev/internal/app/server"
 	diaryUsecase "github.com/zura-t/observer.dev/internal/app/usecases/diary"
 	habitsUsecase "github.com/zura-t/observer.dev/internal/app/usecases/habits"
+	notesUsecase "github.com/zura-t/observer.dev/internal/app/usecases/notes"
 	userUsecase "github.com/zura-t/observer.dev/internal/app/usecases/user"
 	"github.com/zura-t/observer.dev/internal/config"
 	"github.com/zura-t/observer.dev/pkg/logger"
@@ -33,9 +35,10 @@ func main() {
 	defer conn.Close(context.Background())
 
 	//! repos
-	userRepo := userRepo.New(conn)
-	diaryRepo := diaryRepo.New(conn)
+	userRepo := userRepo.New(conn, l)
+	diaryRepo := diaryRepo.New(conn, l)
 	habitsRepo := habitsRepo.New(conn, l)
+	notesRepo := notesRepo.New(conn, l)
 
 	tokenMaker, err := token.NewJwtMaker(config.TokenSymmetricKey)
 	if err != nil {
@@ -46,8 +49,9 @@ func main() {
 	userUsecase := userUsecase.New(userRepo, tokenMaker, config)
 	diaryUsecase := diaryUsecase.New(diaryRepo, config)
 	habitsUsecase := habitsUsecase.New(habitsRepo, config)
+	notesUsecase := notesUsecase.New(notesRepo, config)
 
 	handler := gin.New()
-	server.NewRouter(handler, userUsecase, diaryUsecase, habitsUsecase, tokenMaker, l)
+	server.NewRouter(handler, userUsecase, diaryUsecase, habitsUsecase, notesUsecase, tokenMaker, l)
 	handler.Run("127.0.0.1:8080")
 }

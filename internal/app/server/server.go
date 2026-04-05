@@ -8,16 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 	diaryController "github.com/zura-t/observer.dev/internal/app/controller/http/diary"
 	habitsController "github.com/zura-t/observer.dev/internal/app/controller/http/habits"
+	notesController "github.com/zura-t/observer.dev/internal/app/controller/http/notes"
 	userController "github.com/zura-t/observer.dev/internal/app/controller/http/user"
 	"github.com/zura-t/observer.dev/internal/app/controller/middleware"
 	diaryUsecase "github.com/zura-t/observer.dev/internal/app/usecases/diary"
 	habitsUsecase "github.com/zura-t/observer.dev/internal/app/usecases/habits"
+	notesUsecase "github.com/zura-t/observer.dev/internal/app/usecases/notes"
 	userUsecase "github.com/zura-t/observer.dev/internal/app/usecases/user"
 	"github.com/zura-t/observer.dev/pkg/logger"
 	"github.com/zura-t/observer.dev/pkg/token"
 )
 
-func NewRouter(handler *gin.Engine, userUsecase userUsecase.UserUsecase, diaryUsecase diaryUsecase.DiaryUsecase, habitsUsecase habitsUsecase.HabitsUsecase, tokenMaker token.Maker, logger logger.Interface) {
+func NewRouter(handler *gin.Engine, userUsecase userUsecase.UserUsecase, diaryUsecase diaryUsecase.DiaryUsecase, habitsUsecase habitsUsecase.HabitsUsecase, notesUsecase notesUsecase.NotesUsecase, tokenMaker token.Maker, logger *logger.Logger) {
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
 	handler.Use(cors.New(cors.Config{
@@ -46,5 +48,6 @@ func NewRouter(handler *gin.Engine, userUsecase userUsecase.UserUsecase, diaryUs
 		userController.New(handler, userUsecase, tokenMaker, logger)
 		diaryController.New(authRoutes, diaryUsecase, logger)
 		habitsController.New(authRoutes, habitsUsecase, logger)
+		notesController.New(authRoutes, notesUsecase, logger)
 	}
 }

@@ -16,10 +16,10 @@ import (
 
 type userController struct {
 	userUsecase usecase.UserUsecase
-	logger      logger.Interface
+	logger      *logger.Logger
 }
 
-func New(handler *gin.Engine, userUsecase usecase.UserUsecase, tokenMaker token.Maker, logger logger.Interface) {
+func New(handler *gin.Engine, userUsecase usecase.UserUsecase, tokenMaker token.Maker, logger *logger.Logger) {
 	routes := &userController{userUsecase, logger}
 
 	handler.POST("/register", routes.createUser)
